@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.navArgs
@@ -22,7 +23,7 @@ import com.example.wordoftheday.model.Word
 import com.example.wordoftheday.viewModel.WordViewModel
 
 
-class UpdateWordFragment : Fragment(R.layout.fragment_update_word) {
+class UpdateWordFragment : Fragment(R.layout.fragment_update_word), MenuProvider {
 
     private var _binding: FragmentUpdateWordBinding? = null
     private val binding get() = _binding!!
@@ -34,7 +35,7 @@ class UpdateWordFragment : Fragment(R.layout.fragment_update_word) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        activity?.addMenuProvider(this)
     }
 
     override fun onCreateView(
@@ -86,25 +87,24 @@ class UpdateWordFragment : Fragment(R.layout.fragment_update_word) {
         }.create().show()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        menu.clear()
-        inflater.inflate(R.menu.menu_update_word, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity?.removeMenuProvider(this)
+        _binding = null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_update_word, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
             R.id.menu_delete -> {
                 deleteWord()
             }
         }
-        return super.onOptionsItemSelected(item)
-    }
-
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
+        return true
     }
 
 

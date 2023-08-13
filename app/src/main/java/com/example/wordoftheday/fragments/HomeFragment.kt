@@ -67,6 +67,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
 
     private fun setUpRecyclerView() {
         wordAdapter = WordAdapter()
+
         binding.recyclerView.apply {
             layoutManager = StaggeredGridLayoutManager(
                 2,
@@ -98,6 +99,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         }
     }
 
+    // Menu & SearchVIew
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
         menuInflater.inflate(R.menu.home_menu, menu)
         val searchMenuItem = menu.findItem(R.id.menu_search)
@@ -112,6 +114,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
     }
 
 
+    //SearchView on QueryText operations
     override fun onQueryTextSubmit(query: String?): Boolean {
         // searchWord(query)
         return false
@@ -130,14 +133,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
             .observe(this, { list -> wordAdapter.differ.submitList(list) })
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
-    }
 
+    //OnDestroyOperation
     override fun onDestroyView() {
-        activity?.removeMenuProvider(this)
         super.onDestroyView()
+        activity?.removeMenuProvider(this)
+        _binding = null
     }
 
 

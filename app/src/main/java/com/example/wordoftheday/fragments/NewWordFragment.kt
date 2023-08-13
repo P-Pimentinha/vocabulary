@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import com.example.wordoftheday.MainActivity
@@ -21,7 +22,7 @@ import com.example.wordoftheday.model.Word
 import com.example.wordoftheday.viewModel.WordViewModel
 
 
-class NewWordFragment : Fragment(R.layout.fragment_new_word) {
+class NewWordFragment : Fragment(R.layout.fragment_new_word), MenuProvider {
 
     private var _binding: FragmentNewWordBinding? = null
     private val binding get() = _binding!!
@@ -32,7 +33,7 @@ class NewWordFragment : Fragment(R.layout.fragment_new_word) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        activity?.addMenuProvider(this)
     }
 
     override fun onCreateView(
@@ -52,28 +53,13 @@ class NewWordFragment : Fragment(R.layout.fragment_new_word) {
 
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
 
-
-        menu.clear()
-        inflater.inflate(R.menu.menu_new_word, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onDestroyView() {
+        super.onDestroyView()
+        activity?.removeMenuProvider(this)
         _binding = null
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_save ->{
-                saveWord(mView)
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun saveWord(view: View) {
         val germanWord = binding.etGermanWord.text.toString().trim()
@@ -90,6 +76,19 @@ class NewWordFragment : Fragment(R.layout.fragment_new_word) {
             Toast.makeText(mView.context, "Please enter a word", Toast.LENGTH_LONG).show()
         }
 
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.menu_new_word, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        when (menuItem.itemId) {
+            R.id.menu_save -> {
+                saveWord(mView)
+            }
+        }
+        return true
     }
 
 
