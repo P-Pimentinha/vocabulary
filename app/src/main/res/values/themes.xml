@@ -3,7 +3,10 @@
     <style name="Base.Theme.WordOfTheDay" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/blue</item>
     </style>
 
     <style name="Theme.WordOfTheDay" parent="Base.Theme.WordOfTheDay" />
+
+    <color name="blue">#4A7FAF</color>
 </resources>

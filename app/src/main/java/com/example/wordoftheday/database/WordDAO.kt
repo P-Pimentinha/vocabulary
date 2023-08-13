@@ -22,6 +22,7 @@ interface WordDAO {
     @Delete
     suspend fun deleteWord(word : Word)
 
+
     @Query("SELECT * FROM WORDS ORDER BY id DESC")
     fun getAllWords() : LiveData<List<Word>>
 

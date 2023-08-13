@@ -63,6 +63,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
                 R.id.action_homeFragment_to_newWordFragment
             )
         }
+
+        binding.fabRandomWord.setOnClickListener{
+            it.findNavController().navigate(
+                R.id.action_homeFragment_to_wordOfTheDayFragment
+            )
+        }
     }
 
     private fun setUpRecyclerView() {
@@ -92,9 +98,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
             if (word.isNotEmpty()) {
                 binding.cardVIew.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
+                binding.fabRandomWord.visibility = View.VISIBLE
             } else {
                 binding.cardVIew.visibility = View.VISIBLE
                 binding.recyclerView.visibility = View.GONE
+                binding.fabRandomWord.visibility = View.GONE
             }
         }
     }
