@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
+
+
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -19,18 +23,24 @@ import com.example.wordoftheday.model.Word
 import com.example.wordoftheday.viewModel.WordViewModel
 
 
-class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextListener {
+class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextListener,
+    MenuProvider {
 
+    // binding
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    //viewModel
     private lateinit var wordsViewModel: WordViewModel
+
+    //Adapter
     private lateinit var wordAdapter: WordAdapter
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+        activity?.addMenuProvider(this)
+
     }
 
     override fun onCreateView(
@@ -44,6 +54,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         wordsViewModel = (activity as MainActivity).wordViewModel
 
         setUpRecyclerView()
@@ -87,16 +98,19 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+        menuInflater.inflate(R.menu.home_menu, menu)
+        val searchMenuItem = menu.findItem(R.id.menu_search)
+        val searchView = searchMenuItem.actionView as SearchView
+        searchView.isSubmitButtonEnabled = false
+        searchView.setOnQueryTextListener(this)
 
-        menu.clear()
-        inflater.inflate(R.menu.home_menu, menu)
-
-        val mMenuSearch = menu.findItem(R.id.menu_search).actionView as SearchView
-        mMenuSearch.isSubmitButtonEnabled = false
-        mMenuSearch.setOnQueryTextListener(this)
     }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return true
+    }
+
 
     override fun onQueryTextSubmit(query: String?): Boolean {
         // searchWord(query)
@@ -121,5 +135,11 @@ class HomeFragment : Fragment(R.layout.fragment_home), SearchView.OnQueryTextLis
         _binding = null
     }
 
+    override fun onDestroyView() {
+        activity?.removeMenuProvider(this)
+        super.onDestroyView()
+    }
+
 
 }
+
